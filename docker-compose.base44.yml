@@ -4,7 +4,14 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     image: planka-base44-dev
-    command: ["bash", "-ec", "npm ci --no-audit --no-fund && npm run db:init && exec npm start"]
+    # views/index.ejs (gitignored) normally comes from a production client build; without it every
+    # GET / on the API 500s. In dev the UI is served by Vite on :3000, so write a stub if it's missing.
+    command:
+      - bash
+      - -ec
+      - |
+        [ -f views/index.ejs ] || echo '<!doctype html><title>PLANKA API (dev)</title><p>The PLANKA UI is served on port 3000 in development.</p>' > views/index.ejs
+        npm ci --no-audit --no-fund && npm run db:init && exec npm start
     working_dir: /app
     restart: on-failure
     volumes:
