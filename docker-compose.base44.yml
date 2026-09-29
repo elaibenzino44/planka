@@ -1,0 +1,75 @@
+services:
+  planka-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: planka-base44-dev
+    command: ["bash", "-ec", "npm ci --no-audit --no-fund && npm run db:init && exec npm start"]
+    working_dir: /app
+    restart: on-failure
+    volumes:
+      - ./server:/app
+      - server-node-modules:/app/node_modules
+      - server-venv:/app/.venv
+    environment:
+      - BASE_URL=https://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+      - DATABASE_URL=postgresql://postgres@postgres/planka
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    healthcheck:
+      # "/" needs a production client build (views/index.ejs), so probe the API instead; 401 = alive
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:1337/api/config',r=>process.exit(r.statusCode<500?0:1)).on('error',()=>{console.error('server (sails) failed');process.exit(1)})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 300s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  planka-client:
+    image: planka-base44-dev
+    command: ["bash", "-ec", "npm ci --no-audit --no-fund && exec npx vite --host 0.0.0.0"]
+    working_dir: /app
+    restart: on-failure
+    volumes:
+      - ./client:/app
+      - client-node-modules:/app/node_modules
+      - ./CHANGELOG.md:/CHANGELOG.md
+    ports:
+      - 3000:3000
+    environment:
+      - PROXY_TARGET=http://planka-server:1337
+      - BROWSER=none
+      - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || { echo 'client (vite) failed'; exit 1; }"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 300s
+    depends_on:
+      planka-server:
+        condition: service_started
+
+  postgres:
+    image: postgres:16-alpine
+    restart: on-failure
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=planka
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d planka && psql -U postgres -d planka -c 'SELECT 1'"]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+volumes:
+  db-data:
+  server-node-modules:
+  server-venv:
+  client-node-modules:

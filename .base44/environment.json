@@ -1,0 +1,13 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "SECRET_KEY",
+      "description": "Session/JWT signing key for the Sails server (any random string of 32+ chars).",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    }
+  ]
+}
