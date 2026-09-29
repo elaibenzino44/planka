@@ -18,12 +18,15 @@ export default {
       password: 'Password',
       poweredByPlanka: 'Powered by <1>PLANKA</1>',
       serverConnectionFailed: 'Server connection failed',
+      signUp_title: 'Sign Up',
       totpSessionExpired: 'TOTP session expired. Please log in again.',
       trustThisBrowser: 'Trust this browser for 30 days',
       twoFactorRequired_title: 'Two-Factor Authentication Required',
       unknownError: 'Unknown error, try again later',
       usernameAlreadyInUse: 'Username already in use',
       whoops_title: 'Whoops!',
+      alreadyHaveAnAccount: 'Already have an account?',
+      dontHaveAnAccount: "Don't have an account?",
     },
 
     action: {
@@ -32,6 +35,7 @@ export default {
       goBack: 'Go back',
       goHome: 'Go home',
       logIn: 'Log in',
+      signUp: 'Sign up',
       verify: 'Verify',
     },
   },

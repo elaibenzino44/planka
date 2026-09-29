@@ -21,6 +21,8 @@ export default function* loginSaga() {
     ActionTypes.TERMS_ACCEPT__SUCCESS,
   ]);
 
+  // AUTHENTICATE__SUCCESS above also fires when signUp logs the new user in.
+
   yield cancel(watcherTasks);
   yield call(services.goToRoot);
 }

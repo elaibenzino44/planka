@@ -98,6 +98,30 @@ updateTermsLanguage.failure = (error) => ({
   },
 });
 
+const signUp = (data) => ({
+  type: ActionTypes.SIGN_UP,
+  payload: {
+    data,
+  },
+});
+
+signUp.success = () => ({
+  type: ActionTypes.SIGN_UP__SUCCESS,
+  payload: {},
+});
+
+signUp.failure = (error) => ({
+  type: ActionTypes.SIGN_UP__FAILURE,
+  payload: {
+    error,
+  },
+});
+
+const clearSignUpError = () => ({
+  type: ActionTypes.SIGN_UP_ERROR_CLEAR,
+  payload: {},
+});
+
 const verifyTotp = (data) => ({
   type: ActionTypes.TOTP_VERIFY,
   payload: {
@@ -143,6 +167,8 @@ export default {
   acceptTerms,
   cancelTerms,
   updateTermsLanguage,
+  signUp,
+  clearSignUpError,
   verifyTotp,
   cancelTotpChallenge,
 };

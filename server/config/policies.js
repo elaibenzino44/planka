@@ -30,6 +30,7 @@ module.exports.policies = {
   'access-tokens/delete': ['is-authenticated', 'is-external', 'is-session'],
 
   'users/index': 'is-authenticated',
+  'users/signup': true,
   'users/create': ['is-authenticated', 'is-admin'],
   'users/show': 'is-authenticated',
   'users/update': 'is-authenticated',

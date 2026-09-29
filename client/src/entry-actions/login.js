@@ -36,6 +36,18 @@ const updateTermsLanguage = (value) => ({
   },
 });
 
+const signUp = (data) => ({
+  type: EntryActionTypes.SIGN_UP,
+  payload: {
+    data,
+  },
+});
+
+const clearSignUpError = () => ({
+  type: EntryActionTypes.SIGN_UP_ERROR_CLEAR,
+  payload: {},
+});
+
 const verifyTotp = (data) => ({
   type: EntryActionTypes.TOTP_VERIFY,
   payload: {
@@ -54,6 +66,8 @@ export default {
   acceptTerms,
   cancelTerms,
   updateTermsLanguage,
+  signUp,
+  clearSignUpError,
   verifyTotp,
   cancelTotpChallenge,
 };

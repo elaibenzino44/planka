@@ -137,6 +137,7 @@ module.exports.routes = {
   'DELETE /api/access-tokens/me': 'access-tokens/delete',
 
   'GET /api/users': 'users/index',
+  'POST /api/signup': 'users/signup',
   'POST /api/users': 'users/create',
   'GET /api/users/:id': 'users/show',
   'PATCH /api/users/:id': 'users/update',

@@ -95,25 +95,34 @@ exports.seed = async (knex) => {
       }
     }
 
+    // Look the account up first, so a restart doesn't make Postgres log a unique violation
+    // from an insert that is bound to fail.
+    const existingUser = await knex('user_account')
+      .select('id')
+      .where('email', defaultAdminEmail)
+      .first();
+
     let userId;
-    try {
-      [{ id: userId }] = await knex('user_account').insert(
-        {
-          ...userData,
-          email: defaultAdminEmail,
-          subscribeToOwnCards: false,
-          subscribeToCardWhenCommenting: true,
-          turnOffRecentCardHighlighting: false,
-          enableFavoritesByDefault: true,
-          defaultEditorMode: 'wysiwyg',
-          defaultHomeView: 'groupedProjects',
-          defaultProjectsOrder: 'byDefault',
-          createdAt: new Date().toISOString(),
-        },
-        'id',
-      );
-    } catch (error) {
-      /* empty */
+    if (!existingUser) {
+      try {
+        [{ id: userId }] = await knex('user_account').insert(
+          {
+            ...userData,
+            email: defaultAdminEmail,
+            subscribeToOwnCards: false,
+            subscribeToCardWhenCommenting: true,
+            turnOffRecentCardHighlighting: false,
+            enableFavoritesByDefault: true,
+            defaultEditorMode: 'wysiwyg',
+            defaultHomeView: 'groupedProjects',
+            defaultProjectsOrder: 'byDefault',
+            createdAt: new Date().toISOString(),
+          },
+          'id',
+        );
+      } catch (error) {
+        /* empty */
+      }
     }
 
     if (!userId) {

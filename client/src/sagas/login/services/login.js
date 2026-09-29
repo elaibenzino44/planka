@@ -42,6 +42,27 @@ export function* clearAuthenticateError() {
   yield put(actions.clearAuthenticateError());
 }
 
+export function* signUp(data) {
+  yield put(actions.signUp(data));
+
+  try {
+    yield call(api.signUp, data);
+  } catch (error) {
+    yield put(actions.signUp.failure(error));
+    return;
+  }
+
+  yield put(actions.signUp.success());
+  yield call(authenticate, {
+    emailOrUsername: data.email,
+    password: data.password,
+  });
+}
+
+export function* clearSignUpError() {
+  yield put(actions.clearSignUpError());
+}
+
 export function* acceptTerms(signature) {
   yield put(actions.acceptTerms(signature));
 
@@ -135,6 +156,8 @@ export default {
   initializeLogin,
   authenticate,
   clearAuthenticateError,
+  signUp,
+  clearSignUpError,
   acceptTerms,
   cancelTerms,
   updateTermsLanguage,

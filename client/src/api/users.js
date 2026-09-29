@@ -8,6 +8,8 @@ import socket from './socket';
 
 /* Actions */
 
+const signUp = (data, headers) => http.post('/signup', data, headers);
+
 const getUsers = (headers) => socket.get('/users', undefined, headers);
 
 const createUser = (data, headers) => socket.post('/users', data, headers);
@@ -55,6 +57,7 @@ const deleteUserTrustedDevice = (id, deviceId, headers) =>
 const deleteUser = (id, headers) => socket.delete(`/users/${id}`, undefined, headers);
 
 export default {
+  signUp,
   getUsers,
   createUser,
   // getUser,
